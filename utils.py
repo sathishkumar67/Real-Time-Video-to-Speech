@@ -1,5 +1,24 @@
 from __future__ import annotations
-from moviepy import VideoFileClip 
+import cv2
+from moviepy import VideoFileClip
+
+def get_duration_cv2(filename):
+    video = cv2.VideoCapture(filename)
+    
+    if not video.isOpened():
+        print("Could not open video")
+        return None
+
+    # Get frame count and fps (frames per second)
+    fps = video.get(cv2.CAP_PROP_FPS)
+    frame_count = video.get(cv2.CAP_PROP_FRAME_COUNT)
+    
+    duration = frame_count / fps
+    
+    video.release()
+    print(f"Duration: {duration} seconds") 
+
+
 
 def process_video(input_path, output_video_path, output_audio_path, start_sec, end_sec):
     try:
