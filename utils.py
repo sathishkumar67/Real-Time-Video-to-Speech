@@ -1,8 +1,42 @@
 from __future__ import annotations
+import os
 import cv2
 from moviepy import VideoFileClip
 
-def get_duration_cv2(filename):
+
+def process_video_segments(input_path, start_time, end_time, window_size, output_dir="output_segments"):
+    """
+    Iterates through a time range and processes video segments.
+    
+    Args:
+        input_path (str): Path to the source video.
+        start_time (int): Start time in seconds.
+        end_time (int): End time in seconds.
+        window_size (int): The duration of each segment (sliding window size).
+        output_dir (str): Directory to save outputs. Defaults to "output_segments".
+    """
+    # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+
+    for current_start in range(start_time, end_time, window_size):
+        # Determine the end of the current segment (handling the last chunk)
+        current_end = min(current_start + window_size, end_time)
+
+        print(f"Processing from {current_start} to {current_end}")
+
+        # Construct file paths safely
+        vid_filename = f"video_{current_start}_{current_end}.mp4"
+        aud_filename = f"audio_{current_start}_{current_end}.mp3"
+        
+        process_video(
+            input_path=input_path,
+            start_sec=current_start,
+            end_sec=current_end,
+            output_video_path=os.path.join(output_dir, vid_filename),
+            output_audio_path=os.path.join(output_dir, aud_filename)
+        )
+
+def get_duration(filename):
     video = cv2.VideoCapture(filename)
     
     if not video.isOpened():
