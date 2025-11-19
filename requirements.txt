@@ -3,3 +3,5 @@ accelerate
 ffmpeg
 qwen-omni-utils
 qwen-omni-utils[decord]
+opencv-python
+ffmpeg-python
